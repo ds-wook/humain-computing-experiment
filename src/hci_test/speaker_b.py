@@ -32,7 +32,6 @@ from playsound import playsound
 from google.cloud import speech
 import pyaudio
 from six.moves import queue
-import time
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
@@ -136,7 +135,7 @@ def listen_print_loop(responses, sound):
         #
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
-        if '메시지' in transcript:
+        if '전화' in transcript:
             overwrite_chars = ' ' * (num_chars_printed - len(transcript))
             voice_print = transcript + overwrite_chars
             if not result.is_final:
@@ -152,8 +151,7 @@ def listen_print_loop(responses, sound):
                     break
                 else:
                     print(voice_print)
-                    playsound('../../a_sound/' + sound)
-                    time.sleep(1)
+                    playsound('../../b_sound/' + sound)
                     break
                 num_chars_printed = 0
 
@@ -179,11 +177,11 @@ def main():
                     for content in audio_generator)
         responses = client.streaming_recognize(streaming_config, requests)
         # Now, put the transcription responses to use.
-        path = r'C:\Users\leewo\hci_test\a_sound'
+        path = r'C:\Users\leewo\hci_test\b_sound'
         sounds = os.listdir(path)
         for sound in sounds:
             listen_print_loop(responses, sound)
-                
+
 
 if __name__ == '__main__':
     main()
