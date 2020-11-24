@@ -128,10 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-a_sound/
-b_sound/
-c_sound/
-d_sound/
-e_sound/
+err_sound/
+hel_sound/
+hum_sound/
+umo_sound/
 open_sound/
 image/
