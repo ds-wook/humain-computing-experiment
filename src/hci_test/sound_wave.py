@@ -1,63 +1,35 @@
-import tkinter as tk
-from tkinter import Label
-from PIL import Image, ImageTk
-from itertools import count
-from speaker_a import main
+import numpy as np
+import matplotlib.pyplot as plt
+from MicrophoneStream import MicrophoneStream
+
+# Audio recording parameters
+RATE = 16000
+CHUNK = int(RATE / 10)  # 100ms
 
 
-class ImageLabel(tk.Label):
-    """a label that displays images, and plays them if they are gifs"""
-    def load(self, im):
-        if isinstance(im, str):
-            im = Image.open(im)
-        self.loc = 0
-        self.frames = []
-
+def plot_audio(audio_gen):
+    full_frame = []
+    for i, x in enumerate(audio_gen):
+        # x=np.fromstring(x, np.int16)
+        full_frame.append(x)
+        wav = np.frombuffer(x, np.int16)
+        plt.cla()
+        plt.axis([0, CHUNK * 10, -5000, 5000])
         try:
-            for i in count(1):
-                self.frames.append(ImageTk.PhotoImage(im.copy()))
-                im.seek(i)
-        except EOFError:
-            pass
-
-        try:
-            self.delay = im.info['duration']
-        except:
-            self.delay = 100
-
-        if len(self.frames) == 1:
-            self.config(image=self.frames[0])
-        else:
-            self.next_frame()
-
-    def unload(self):
-        self.config(image=None)
-        self.frames = None
-
-    def next_frame(self):
-        if self.frames:
-            self.loc += 1
-            self.loc %= len(self.frames)
-            self.config(image=self.frames[self.loc])
-            self.after(self.delay, self.next_frame)
+            plt.plot(wav[-CHUNK * 10:])
+        except ValueError:
+            plt.plot(wav)
+        plt.xlim([0, 2000])
+        plt.pause(0.01)
 
 
-def print_sound():
-    root = tk.Tk()
-    root.title('AI Speaker')
-    root['bg'] = 'black'
-    root.geometry()
-    root.resizable(False, False)
-    label = Label(root, text='원하시는 것을 말씀해주세요~')
-    label.pack()
-    label['fg'] = 'white'
-    label['bg'] = 'black'
-    lbl = ImageLabel(root)
-    lbl.pack()
-    lbl['bg'] = 'black'
-    lbl.load('../../image/sound_wave.gif')
+def main():
+    plt.ion()
+    with MicrophoneStream(RATE, CHUNK) as stream:
+        audio_generator = stream.generator()
+        plot_audio(audio_generator)
+
+
+if __name__ == '__main__':
     main()
-    root.mainloop()
-
-
-print_sound()
+    print("end main")
