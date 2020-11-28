@@ -1,6 +1,8 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from MicrophoneStream import MicrophoneStream
+
 
 # Audio recording parameters
 RATE = 16000
@@ -15,12 +17,10 @@ def plot_audio(audio_gen):
         wav = np.frombuffer(x, np.int16)
         plt.cla()
         plt.axis([0, CHUNK * 10, -5000, 5000])
-        try:
-            plt.plot(wav[-CHUNK * 10:])
-        except ValueError:
-            plt.plot(wav)
-        plt.xlim([0, 2000])
+        plt.plot(wav[-CHUNK * 10:])
+        plt.xlim([0, 1500])
         plt.pause(0.01)
+        plt.show()
 
 
 def main():
@@ -31,5 +31,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-    print("end main")
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("end main")
+        sys.exit(0)

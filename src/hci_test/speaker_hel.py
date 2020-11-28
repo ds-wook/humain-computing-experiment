@@ -26,7 +26,7 @@ def listen_print_loop(responses, sound):
         transcript = result.alternatives[0].transcript
 
         if '메시지' in transcript or '전화' in transcript or\
-           '보여' in transcript or '노래' in transcript or '길' in transcript:
+           '보여' in transcript or '노래' in transcript or '길 알려' in transcript:
             overwrite_chars = ' ' * (num_chars_printed - len(transcript))
             voice_print = transcript + overwrite_chars
             if not result.is_final:
