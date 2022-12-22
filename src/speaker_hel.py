@@ -6,7 +6,7 @@ import os
 import time
 from playsound import playsound
 from google.cloud import speech
-from MicrophoneStream import MicrophoneStream
+from mic.microphone_stream import MicrophoneStream
 
 # Audio recording parameters
 RATE = 16000
@@ -14,7 +14,6 @@ CHUNK = int(RATE / 10)  # 100ms
 
 
 def listen_print_loop(responses, sound):
-
     num_chars_printed = 0
     for response in responses:
         if not response.results:
@@ -41,7 +40,7 @@ def listen_print_loop(responses, sound):
                     break
                 else:
                     print(voice_print)
-                    playsound('../../umo_sound/' + sound)
+                    playsound('../../hel_sound/' + sound)
                     time.sleep(2)
                     break
                 num_chars_printed = 0
@@ -66,11 +65,10 @@ def main():
                     for content in audio_generator)
         responses = client.streaming_recognize(streaming_config, requests)
         # Now, put the transcription responses to use.
-        path = r'C:\Users\leewo\hci_test\umo_sound'
+        path = "../../umo_sound/"
         sounds = os.listdir(path)
         for sound in sounds:
             listen_print_loop(responses, sound)
-
 
 if __name__ == '__main__':
     main()

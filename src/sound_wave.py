@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from MicrophoneStream import MicrophoneStream
+from mic.microphone_stream import MicrophoneStream
 
 
 # Audio recording parameters

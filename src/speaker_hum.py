@@ -1,12 +1,11 @@
 from __future__ import division
-
 import re
 import sys
 import os
 import time
 from playsound import playsound
 from google.cloud import speech
-from MicrophoneStream import MicrophoneStream
+from mic.microphone_stream import MicrophoneStream
 
 # Audio recording parameters
 RATE = 16000
@@ -14,6 +13,7 @@ CHUNK = int(RATE / 10)  # 100ms
 
 
 def listen_print_loop(responses, sound):
+
     num_chars_printed = 0
     for response in responses:
         if not response.results:
@@ -40,13 +40,14 @@ def listen_print_loop(responses, sound):
                     break
                 else:
                     print(voice_print)
-                    playsound('../../hel_sound/' + sound)
+                    playsound('../../hum_sound/' + sound)
                     time.sleep(2)
                     break
                 num_chars_printed = 0
 
 
 def main():
+    global CHUNK
     language_code = 'ko-KR'
     print('AI 스피커가 동작하는데 시간이 걸립니다. 잠시만 기다려 주세요.')
     client = speech.SpeechClient()
@@ -64,7 +65,8 @@ def main():
         requests = (speech.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
         responses = client.streaming_recognize(streaming_config, requests)
-        path = r'C:\Users\leewo\hci_test\hel_sound'
+        # Now, put the transcription responses to use.
+        path = "../../umo_sound/"
         sounds = os.listdir(path)
         for sound in sounds:
             listen_print_loop(responses, sound)
