@@ -134,4 +134,4 @@ hum_sound/
 umo_sound/
 open_sound/
 image/
-.vscode/
+.vscode/*
